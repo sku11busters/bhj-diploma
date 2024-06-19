@@ -4,12 +4,13 @@
  * Имеет свойство URL, равное '/user'.
  * */
 class User {
+  static URL = '/user';
   /**
    * Устанавливает текущего пользователя в
    * локальном хранилище.
    * */
   static setCurrent(user) {
-
+    localStorage.setItem('user', JSON.stringify(user));
   }
 
   /**
@@ -17,7 +18,7 @@ class User {
    * пользователе из локального хранилища.
    * */
   static unsetCurrent() {
-
+    localStorage.removeItem('user');
   }
 
   /**
@@ -25,7 +26,10 @@ class User {
    * из локального хранилища
    * */
   static current() {
-
+    if(localStorage.getItem('user') !== 'undefined') {
+      return JSON.parse(localStorage.getItem('user')); 
+    }
+    return undefined
   }
 
   /**
@@ -33,7 +37,20 @@ class User {
    * авторизованном пользователе.
    * */
   static fetch(callback) {
-
+    createRequest({
+      url: this.URL + '/current',
+      method: 'GET',
+      callback: (err, response) => {
+        if (response.success && response.user) {
+          User.setCurrent(response.user);
+          console.log('Пользователь авторизован:', response.user);
+        } else if (response.success === false) {
+          User.unsetCurrent();
+          console.log('Запись об авторизации удалена');
+        }
+        callback(err, response);
+      }
+    });
   }
 
   /**
@@ -64,7 +81,17 @@ class User {
    * User.setCurrent.
    * */
   static register(data, callback) {
-
+    createRequest({
+      url: this.URL + '/register',
+      data: data,
+      method: 'POST',
+      callback: function(err, response) {
+        if (response.success) {
+          User.setCurrent();
+        }
+        callback(err, response);
+      }
+    });
   }
 
   /**
@@ -72,6 +99,15 @@ class User {
    * выхода необходимо вызвать метод User.unsetCurrent
    * */
   static logout(callback) {
-
+    createRequest({
+      url: this.URL + '/logout',
+      method: 'POST',
+      callback: function(err, response) {
+        if (response.success) {
+          User.unsetCurrent();
+        }
+        callback(err, response);
+      }
+    });
   }
 }

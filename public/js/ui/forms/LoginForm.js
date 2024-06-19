@@ -10,6 +10,14 @@ class LoginForm extends AsyncForm {
    * закрывает окно, в котором находится форма
    * */
   onSubmit(data) {
-
+    User.login(data, (err,response) => {
+      if(response.user && response){
+        App.setState('user-logged');
+        this.element.reset(); 
+        App.getModal('login').close();
+      } else {
+        err = new Error ('Пользователь c таким email и паролем не найден');
+      }
+    });
   }
 }

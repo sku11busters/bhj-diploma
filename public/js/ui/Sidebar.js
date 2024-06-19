@@ -18,7 +18,14 @@ class Sidebar {
    * при нажатии на кнопку .sidebar-toggle
    * */
   static initToggleButton() {
-
+    let button = document.querySelector('.sidebar-toggle');
+    let mini = document.querySelector('.sidebar-mini');
+    button.addEventListener('click', (e) =>{
+      e.preventDefault();
+      mini.classList.toggle('sidebar-open');
+      mini.classList.toggle('sidebar-collapse');
+      return false;
+    })
   }
 
   /**
@@ -29,6 +36,28 @@ class Sidebar {
    * выходу устанавливает App.setState( 'init' )
    * */
   static initAuthLinks() {
+    let login = document.querySelector('.menu-item_login');
+    login.addEventListener('click', (e)=>{
+      e.preventDefault();
+      App.getModal('login').open();
+    })
 
+    let register = document.querySelector('.menu-item_register');
+    register.addEventListener('click', (e)=>{
+      e.preventDefault();
+      App.getModal('register').open();
+    })
+    
+    let logout = document.querySelector('.menu-item_logout');
+    logout.addEventListener('click', (e) => {
+      e.preventDefault();
+      User.logout((err, response)=>{
+        if(response.success == true){
+          App.setState('init');
+        } else {
+          err = new Error ('Не удалось выйти')
+        }
+      })
+    })
   }
 }
