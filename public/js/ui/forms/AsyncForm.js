@@ -13,9 +13,7 @@ class AsyncForm {
    * через registerEvents()
    * */
   constructor(element) {
-    if(element == ''){
-      throw new Error ('Ошибка формы');
-    }
+    if (!element) throw new Error('Element must be provided');
     this.element = element;
     this.registerEvents();
   }
@@ -42,7 +40,7 @@ class AsyncForm {
    * */
   getData() {
     let form = new FormData(this.element);
-    return form;
+    return Object.fromEntries(form.entries());
   }
 
   onSubmit(options){
@@ -54,7 +52,6 @@ class AsyncForm {
    * данные, полученные из метода getData()
    * */
   submit() {
-    let options = this.getData();
-    this.onSubmit(options);
+    this.onSubmit(this.getData());
   }
 }

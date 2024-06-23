@@ -14,14 +14,7 @@ class Entity {
       url: this.URL,
       data: data,
       method: 'GET',
-      callback: (err, response) =>{
-        if(response.success && response){
-          console.log('Данные получены')
-        } else {
-          err = new Error ('Ошибка получения даных')
-        }
-        callback(err, response);
-      }
+      callback
     });
   }
 
@@ -35,14 +28,7 @@ class Entity {
       url: this.URL,
       data: data,
       method: 'PUT',
-      callback: (err, response) =>{
-        if(response.success && response){
-          console.log('Успешное создание')
-        } else {
-          err = new Error ('Ошибка создания')
-        }
-        callback(err, response);
-      }
+      callback
     });
   }
 
@@ -55,14 +41,7 @@ class Entity {
       url: this.URL,
       data: data,
       method: 'DELETE',
-      callback: (err, response) =>{
-        if(response.success && response){
-          console.log('Успешное удаление')
-        } else {
-          err = new Error ('Ошибка удаления')
-        }
-        callback(err, response);
-      }
+      callback
     });
   }
 }

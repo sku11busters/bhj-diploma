@@ -15,8 +15,6 @@ class LoginForm extends AsyncForm {
         App.setState('user-logged');
         this.element.reset(); 
         App.getModal('login').close();
-      } else {
-        err = new Error ('Пользователь c таким email и паролем не найден');
       }
     });
   }

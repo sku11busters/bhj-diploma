@@ -12,9 +12,7 @@ class UserWidget {
    * необходимо выкинуть ошибку.
    * */
   constructor(element) {
-    if (element == "") {
-      throw new Error("element undefined");
-    }
+    if (!element) throw new Error('Element must be provided');
     this.element = element;
   }
 
@@ -28,7 +26,7 @@ class UserWidget {
   update() {
     let user = User.current();
     if(user) {
-      document.querySelector(".user-name").textContent = user.name;
+      this.element.querySelector(".user-name").textContent = user.name;
     }
   }
 }

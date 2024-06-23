@@ -14,9 +14,7 @@ class AccountsWidget {
    * необходимо выкинуть ошибку.
    * */
   constructor( element ) {
-    if (element == ''){
-      throw new Error ('element undefined');
-    }
+    if (!element) throw new Error('Element must be provided');
     
     this.element = element;
     this.registerEvents();
@@ -59,9 +57,7 @@ class AccountsWidget {
         if(response.success && response){
           this.clear();
           response.data.forEach(account => this.renderItem(account));
-        } else {
-          err = new Error ('Не удалось получить список счетов')
-        }
+        } 
       });  
     }
   }

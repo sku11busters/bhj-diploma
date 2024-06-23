@@ -11,9 +11,7 @@ class TransactionsPage {
    * через registerEvents()
    * */
   constructor( element ) {
-    if(element == ''){
-      throw new Error ('element undefined');
-    }
+    if (!element) throw new Error('Element must be provided');
     this.element = element;
     this.registerEvents();
   }
@@ -32,18 +30,12 @@ class TransactionsPage {
    * TransactionsPage.removeAccount соответственно
    * */
   registerEvents() {
-    this.element.querySelector('.remove-account').addEventListener('click', () => {
-      if (confirm('Вы действительно хотите удалить счёт?')) {
-        this.removeAccount();
-      }
-    });
-
     this.element.addEventListener('click', event => {
-      if (event.target.classList.contains('transaction__remove')) {
-        const transactionId = event.target.dataset.id;
-        if (confirm('Вы действительно хотите удалить эту транзакцию?')) {
-          this.removeTransaction(transactionId);
-        }
+      if (event.target.closest('.remove-account')) {
+        this.removeAccount();
+      } else if (event.target.closest('.transaction__remove')) {
+        const transactionId = event.target.closest('.transaction__remove').dataset.id;
+        this.removeTransaction(transactionId);
       }
     });
   }
@@ -58,20 +50,14 @@ class TransactionsPage {
    * для обновления приложения
    * */
   removeAccount() {
-    if (!this.lastOptions) return;
-
-    let answer = confirm('Вы действительно хотите удалить счёт?');
-    
-    if(answer){
+    if(this.lastOptions && confirm('Вы действительно хотите удалить счёт?')){
       let form = new FormData();
       form.append('id', this.lastOptions.account_id);
       Account.remove(form, (err, response)=>{
         if(response.success && response){
           App.updateWidgets();
           App.updateForms();
-        } else {
-          err = new Error('Не удалось удалить счет');
-        }
+        } 
       })
       this.clear();
     }
@@ -84,17 +70,14 @@ class TransactionsPage {
    * либо обновляйте текущую страницу (метод update) и виджет со счетами
    * */
   removeTransaction( id ) {
-    let answer = confirm('Удалить транзакцию?');
-    if(answer){
-      let form = new FormData();
-      form.append('id', id)
-      Transaction.remove(form, (err, response)=>{
-        if(response && response.success){
+    if (confirm('Удалить транзакцию?')) {
+      Transaction.remove(id, (err, response) => {
+        if (response && response.success) {
           App.update();
-        }else{
-          err = new Error('Не удалось удалить транзакцию');
+        } else {
+          console.error('Ошибка при удалении транзакции:', err);
         }
-      })
+      });
     }
   }
 
@@ -111,11 +94,12 @@ class TransactionsPage {
     Account.get(options.account_id, (err, response) => {
       if (response && response.success) {
         this.renderTitle(response.data.name);
-        Transaction.list(options, (err, response) => {
-          if (response && response.success) {
-            this.renderTransactions(response.data);
-          }
-        });
+      }
+    });
+
+    Transaction.list(options, (err, response) => {
+      if (response && response.success) {
+        this.renderTransactions(response.data);
       }
     });
   }
@@ -184,9 +168,7 @@ class TransactionsPage {
    * */
   renderTransactions(data){
     const contentElement = this.element.querySelector('.content');
-    contentElement.innerHTML = '';
-    data.forEach(item => {
-      contentElement.innerHTML += this.getTransactionHTML(item);
-    });
+    const transactionsHTML = data.reduce((html, item) => html + this.getTransactionHTML(item), '');
+    contentElement.innerHTML = transactionsHTML;
   }
 }

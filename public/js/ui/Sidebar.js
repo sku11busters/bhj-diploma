@@ -24,7 +24,6 @@ class Sidebar {
       e.preventDefault();
       mini.classList.toggle('sidebar-open');
       mini.classList.toggle('sidebar-collapse');
-      return false;
     })
   }
 
@@ -54,8 +53,6 @@ class Sidebar {
       User.logout((err, response)=>{
         if(response.success == true){
           App.setState('init');
-        } else {
-          err = new Error ('Не удалось выйти')
         }
       })
     })

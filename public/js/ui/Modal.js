@@ -12,9 +12,8 @@ class Modal {
    * необходимо выкинуть ошибку.
    * */
   constructor(element){
-    if(element == ''){
-      throw new Error ('Ошибка всплывающего окна');
-    }
+    if (!element) throw new Error('Element must be provided');
+    
     this.element = element;
     this.registerEvents();
   }

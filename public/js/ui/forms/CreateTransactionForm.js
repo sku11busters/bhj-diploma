@@ -21,12 +21,10 @@ class CreateTransactionForm extends AsyncForm {
     Account.list(User.current(), (err, response) => {
       if (response && response.data) {
         const accountsSelect = this.element.querySelector('.accounts-select');
-        accountsSelect.innerHTML = '';
-        response.data.forEach(account => {
-          accountsSelect.innerHTML += `<option value="${account.id}">${account.name}</option>`;
-        });
-      } else {
-        err = new Error ('Ошибка при получении');
+        const optionsMarkup = response.data.reduce((markup, account) => {
+          return markup + `<option value="${account.id}">${account.name}</option>`;
+        }, '');
+        accountsSelect.innerHTML = optionsMarkup;
       }
     });
   }
@@ -41,7 +39,12 @@ class CreateTransactionForm extends AsyncForm {
     Transaction.create(data, (err, response) => {
       if (response && response.success) {
         this.element.reset();
-        App.getModal(this.element.id).close();
+        console.log(this.element)
+        if(this.element.id === 'new-income-form'){
+          App.getModal('newIncome').close();
+        } else if(this.element.id === 'new-expense-form') {
+          App.getModal('newExpense').close();
+        }
         App.update();
       }
     });

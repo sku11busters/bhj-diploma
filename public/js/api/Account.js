@@ -13,14 +13,7 @@ class Account extends Entity {
     createRequest({
       url: this.URL + '/' + id,
       method: 'GET',
-      callback: (err, response)=>{
-        if(response.user && response){
-          console.log('Получена информация о счете', response.user)
-        } else {
-          err = new Error ('Ошибка получения информации о счете')
-        }
-        callback(err, response);
-      }
+      callback
     });
   }
 }
