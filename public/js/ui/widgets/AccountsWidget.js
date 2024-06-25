@@ -54,7 +54,7 @@ class AccountsWidget {
   update() {
     if(User.current()){
       Account.list(User.current(), (err,response)=>{
-        if(response.success && response){
+        if(response && response.success){
           this.clear();
           response.data.forEach(account => this.renderItem(account));
         } 

@@ -51,10 +51,8 @@ class TransactionsPage {
    * */
   removeAccount() {
     if(this.lastOptions && confirm('Вы действительно хотите удалить счёт?')){
-      let form = new FormData();
-      form.append('id', this.lastOptions.account_id);
-      Account.remove(form, (err, response)=>{
-        if(response.success && response){
+      Account.remove({id: this.lastOptions.account_id}, (err, response) => {
+        if(response && response.success){
           App.updateWidgets();
           App.updateForms();
         } 
@@ -71,12 +69,10 @@ class TransactionsPage {
    * */
   removeTransaction( id ) {
     if (confirm('Удалить транзакцию?')) {
-      Transaction.remove(id, (err, response) => {
+      Transaction.remove({id}, (err, response) => {
         if (response && response.success) {
           App.update();
-        } else {
-          console.error('Ошибка при удалении транзакции:', err);
-        }
+        } 
       });
     }
   }

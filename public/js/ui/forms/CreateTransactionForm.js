@@ -19,7 +19,7 @@ class CreateTransactionForm extends AsyncForm {
    * */
   renderAccountsList() {
     Account.list(User.current(), (err, response) => {
-      if (response && response.data) {
+      if (response && response.success) {
         const accountsSelect = this.element.querySelector('.accounts-select');
         const optionsMarkup = response.data.reduce((markup, account) => {
           return markup + `<option value="${account.id}">${account.name}</option>`;
@@ -39,7 +39,6 @@ class CreateTransactionForm extends AsyncForm {
     Transaction.create(data, (err, response) => {
       if (response && response.success) {
         this.element.reset();
-        console.log(this.element)
         if(this.element.id === 'new-income-form'){
           App.getModal('newIncome').close();
         } else if(this.element.id === 'new-expense-form') {

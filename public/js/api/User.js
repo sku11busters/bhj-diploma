@@ -38,12 +38,10 @@ class User {
       url: this.URL + '/current',
       method: 'GET',
       callback: (err, response) => {
-        if (response.success && response.user) {
+        if (response && response.success) {
           User.setCurrent(response.user);
-          console.log('Пользователь авторизован:', response.user);
-        } else if (response.success === false) {
+        } else {
           User.unsetCurrent();
-          console.log('Запись об авторизации удалена');
         }
         callback(err, response);
       }
@@ -63,7 +61,7 @@ class User {
       responseType: 'json',
       data,
       callback: (err, response) => {
-        if (response && response.user) {
+        if (response && response.success) {
           this.setCurrent(response.user);
         }
         callback(err, response);
@@ -83,7 +81,7 @@ class User {
       data: data,
       method: 'POST',
       callback: function(err, response) {
-        if (response.success) {
+        if (response && response.success) {
           User.setCurrent();
         }
         callback(err, response);
@@ -100,7 +98,7 @@ class User {
       url: this.URL + '/logout',
       method: 'POST',
       callback: function(err, response) {
-        if (response.success) {
+        if (response && response.success) {
           User.unsetCurrent();
         }
         callback(err, response);

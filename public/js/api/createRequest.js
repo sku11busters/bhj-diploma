@@ -16,20 +16,13 @@ function createRequest({ url, data, method, callback }) {
   xhr.open(method, queryUrl);
 
   xhr.onload = function() {
-    if (xhr.status >= 200 && xhr.status < 300) {
-      callback(null, xhr.response);
-    } else {
-      callback(new Error('Error: ' + xhr.statusText), null);
-    }
+    callback(null, xhr.response);
   };
 
   xhr.onerror = function() {
     callback(new Error('Network Error'), null);
   };
 
-  if (method === 'GET') {
-    xhr.send();
-  } else {
-    xhr.send(formData);
-  }
+  xhr.send(method === 'GET' ? null : formData);
 }
+
